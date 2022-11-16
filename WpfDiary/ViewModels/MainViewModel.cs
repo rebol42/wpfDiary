@@ -21,6 +21,8 @@ namespace WpfDiary.ViewModels
     {
         private Repository _repository = new Repository();
 
+        private DatabaseSettingsModel DbSettings = new DatabaseSettingsModel();
+
         public MainViewModel()
         {
             /* to ustawiamy na pierwszym uruchomieniu zeby na podstawie utworzonych klas Domains/Wrappers/Configurations utworzyl baze danych.
@@ -29,7 +31,10 @@ namespace WpfDiary.ViewModels
               var students = context.Students.ToList();
           }
           */
-          
+
+            CheckConnection();
+
+
             RefreshStudentsCommand = new RelayCommand(RefreshStudents);
             AddStudentCommand = new RelayCommand(AddEditStudent);
             EditStudentCommand = new RelayCommand(AddEditStudent, CanEditDeleteStudent);
@@ -182,6 +187,17 @@ namespace WpfDiary.ViewModels
           
 
             SelectedGroupId = 0;
+        }
+
+        private void CheckConnection()
+        {
+            if (!DbSettings.CheckConnection())
+            {
+                MessageBox.Show("Zostanie otwarte okono konfiguracyjne");
+                var databseSettigns = new DatabaseSettingsView();
+                databseSettigns.ShowDialog();
+
+            }
         }
 
 

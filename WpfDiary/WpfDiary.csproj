@@ -176,6 +176,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="DbScripts\202210181820364_setLastNameMaxLenghtandRequiredInStudentsTable.sql" />
+    <SplashScreen Include="pobrane.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

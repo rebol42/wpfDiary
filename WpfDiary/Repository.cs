@@ -20,8 +20,6 @@ namespace WpfDiary
                 return context.Groups.ToList();
             }
 
-            
-
         }
 
         public List<StudentWrapper> GetStudents(int groupId)

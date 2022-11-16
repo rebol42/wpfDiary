@@ -11,6 +11,7 @@ using WpfDiary.Commands;
 using System.Windows.Input;
 using System.Windows;
 using MahApps.Metro.Controls;
+using WpfDiary.Properties;
 
 namespace WpfDiary.ViewModels
 {
@@ -29,7 +30,14 @@ namespace WpfDiary.ViewModels
  
             if(databaseSettigns == null)
             {
-                DatabaseSettigns = new DbConnect();
+                DatabaseSettigns = new DbConnect
+                {
+                    Server = Settings.Default.Server,
+                    ServerDbName = Settings.Default.ServerDbName,
+                    Database = Settings.Default.Database,
+                    User = Settings.Default.User,
+                    Password = Settings.Default.Password
+            };
             }
             else
                 DatabaseSettigns = databaseSettigns;
@@ -43,8 +51,6 @@ namespace WpfDiary.ViewModels
 
         private void SaveDbSettigns(object obj)
         {
-          // _databaseSettigns = obj as DbConnect;
-
             _appCbContext.dbConnection(_databaseSettigns);
         }
 
@@ -55,7 +61,14 @@ namespace WpfDiary.ViewModels
 
         private void DbTestConnection(object obj)
         {
-           
+            _appCbContext.changeConnectionString(_databaseSettigns);
+   
+
+            if (this.CheckConnection())
+            {
+                MessageBox.Show("Prawidłowe połączenie z bazą danych");
+            }
+
         }
         private void CloseWindow(MetroWindow window)
         {
@@ -72,6 +85,29 @@ namespace WpfDiary.ViewModels
                 _databaseSettigns = value;
                 OnPropertyChanged();
             }
+        }
+
+
+        public bool CheckConnection()
+        {
+            bool flag = false;
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    context.Database.Connection.Open();
+                    context.Database.Connection.Close();
+                    flag = true;
+                    
+                }
+
+            }
+            catch (Exception t)
+            {
+                MessageBox.Show("Błąd połączenia z baza danych");
+                flag = false;
+            }
+            return flag;
         }
     }
 }

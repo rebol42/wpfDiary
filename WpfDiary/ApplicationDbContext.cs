@@ -11,22 +11,25 @@ namespace WpfDiary
 
     public class ApplicationDbContext : DbContext
     {
-
         // pierwsza praca domowa 
         private static string _server = Settings.Default.Server;
         private static string _serverDbName = Settings.Default.ServerDbName;
         private static string _database = Settings.Default.Database;
-        private static string _user =  Settings.Default.User;
+        private static string _user = Settings.Default.User;
         private static string _password = Settings.Default.Password;
 
+
         private static string _dbConnectionString = string.Format("Server={0};Database={1};User Id={2};Password={3};"
-            , _server, _database, _user, _password);
+           , _server, _database, _user, _password);
 
 
         public ApplicationDbContext()
             : base(_dbConnectionString)
         {
-        }
+           
+
+         }
+
 
         //DbSet - klasa generyczna , która na podstawie klas Domains bedzie wiedziala jakie ma utworzyc tabele
         public DbSet<Student> Students { get; set; }
@@ -44,9 +47,21 @@ namespace WpfDiary
 
         public void dbConnection(DbConnect dbConnect)
         {
+            Settings.Default.Server         =   dbConnect.Server;
+            Settings.Default.ServerDbName   =   dbConnect.ServerDbName;
+            Settings.Default.Database       =   dbConnect.Database;
+            Settings.Default.User           =   dbConnect.User;
+            Settings.Default.Password       =   dbConnect.Password;
 
+            Settings.Default.Save();
         }
-        
+
+        public void changeConnectionString(DbConnect dbConnect)
+        {
+            _dbConnectionString = string.Format("Server={0};Database={1};User Id={2};Password={3};"
+           , dbConnect.Server, dbConnect.Database, dbConnect.User, dbConnect.Password);
+        }
+      
 
     }
 
